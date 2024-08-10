@@ -7,8 +7,6 @@ from django.contrib.auth import get_user_model #get default user model to be ref
 class ModelTests(TestCase):
     """ Test creating a user with email is succesful"""
     def test_create_user_with_email_successful(self):
-
-
         email = "test1@example.com"
         password = 'testpass123'
         user = get_user_model().objects.create_user(
@@ -43,4 +41,7 @@ class ModelTests(TestCase):
         )
         self.assertTrue(user.is_superuser)
         self.assertTrue(user.is_staff)
+
+
+
 
