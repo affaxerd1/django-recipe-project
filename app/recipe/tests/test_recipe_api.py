@@ -163,6 +163,7 @@ class PrivateRecipeApiTests(TestCase):
         self.assertEqual(recipe.user, self.user)
 
     def test_delete_recipe(self):
+        """test deleting a recipe is successful"""
         recipe = create_recipe(user = self.user)
 
         url = detail_url(recipe.id)
