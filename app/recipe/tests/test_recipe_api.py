@@ -1,4 +1,6 @@
 from decimal import Decimal
+from http.client import HTTPResponse
+
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
@@ -86,3 +88,17 @@ class PrivateRecipeApiTests(TestCase):
 
         serializer = RecipeDetailSerializer(recipe)
         self.assertEqual(res.data, serializer.data)
+
+    def test_create_recipe(self):
+        """Test create a new recipe"""
+        payload = {
+            'title': 'Chocolate cheesecake',
+            'time_minutes': 30,
+            'price': Decimal('5.00'),
+        }
+        res = self.client.post(RECIPES_URL, payload)
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+        recipe = Recipe.objects.get(id=res.data['id'])
+        for k,v in payload.items:
+            self.assertEqual(getattr(recipe,k), v)
+        self.assertEqual(recipe.user, self.user)
