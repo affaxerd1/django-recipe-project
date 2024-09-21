@@ -1,5 +1,6 @@
 from decimal import Decimal
 from http.client import HTTPResponse
+from venv import create
 
 from django.contrib.auth import get_user_model
 from django.test import TestCase
@@ -147,5 +148,16 @@ class PrivateRecipeApiTests(TestCase):
         recipe.refresh_from_db()
         for k,v in payload.items():
             self.assertEqual(getattr(recipe, k), v)
+        self.assertEqual(recipe.user, self.user)
+
+    def test_update_user_returns_error(self):
+        """Test changing the recipe user results in an error"""
+        new_user = create_user( email="example2@example.com", password = "test123")
+        recipe = create_recipe(user=self.user)
+        payload = { 'user' : new_user.id}
+        url = detail_url(recipe.id)
+        self.client.patch(url, payload)
+
+        recipe.refresh_from_db()
         self.assertEqual(recipe.user, self.user)
         
