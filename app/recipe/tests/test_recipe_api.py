@@ -1,6 +1,7 @@
 from decimal import Decimal
 from http.client import HTTPResponse
 from venv import create
+from wsgiref.validate import assert_
 
 from django.contrib.auth import get_user_model
 from django.test import TestCase
@@ -160,4 +161,14 @@ class PrivateRecipeApiTests(TestCase):
 
         recipe.refresh_from_db()
         self.assertEqual(recipe.user, self.user)
+
+    def test_delete_recipe(self):
+        """test deleting a recipe is successful"""
+        recipe = create_recipe(user = self.user)
+
+        url = detail_url(recipe.id)
+        res= self.client.delete(url)
+
+        self.assertEqual(res.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertFalse(Recipe.objects.filter(id=recipe.id).exists())
         
