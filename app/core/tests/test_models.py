@@ -5,6 +5,10 @@ from django.contrib.auth import get_user_model  # get default user model to be r
 from core import models
 from core.models import Recipe
 
+def create_user(email="email@example.com", password="test123"):
+    """create and return a user"""
+    return get_user_model().objects.create_user(email, password)
+
 
 class ModelTests(TestCase):
     """Test creating a user with email is successful"""
@@ -61,3 +65,9 @@ class ModelTests(TestCase):
         )
 
         self.assertEqual(str(recipe), recipe.title)
+
+    def test_create_tag(self):
+        user = create_user()
+        tag = models.Tag.objects.create(user=user, name= "Tag1")
+
+        self.assertEqual(str(tag), tag.name)
